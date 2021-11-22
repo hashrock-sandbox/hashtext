@@ -29,7 +29,7 @@ namespace hash_textarea
             Path = new ReactiveProperty<string?>();
             Title = Path.Select(i =>
             {
-                return i != null ? "HashText - " + i : "HashText - New File";
+                return i != null ? "hashtext - " + System.IO.Path.GetFileName(i) : "hashtext - New File";
             }).ToReactiveProperty<string>();
 
             //Title = Path.Value != null ? "HashText" + Path.Value : "HashText";

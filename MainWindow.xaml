@@ -22,13 +22,59 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <DockPanel>
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="File">
+            <Menu DockPanel.Dock="Top" Background="White" Foreground="#FF666666">
+                <MenuItem Header="File" Foreground="#FF3A3A3A" FontFamily="MS Gothic">
                     <MenuItem Header="Save" InputGestureText="Ctrl+S" Command="{Binding SaveFileCommand}" />
                     <MenuItem Header="Load" InputGestureText="Ctrl+O" Command="{Binding OpenFileCommand}" />
                 </MenuItem>
             </Menu>
-            <TextBox Text="{Binding Content.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" DockPanel.Dock="Bottom" FontFamily="MS Gothic" Padding="4,8,4,8"/>
+            <TextBox Text="{Binding Content.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                     TextBlock.LineHeight="20" TextBlock.LineStackingStrategy="BlockLineHeight"
+                     TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" DockPanel.Dock="Bottom" FontFamily="MS Gothic" Padding="4,8,4,8" VerticalScrollBarVisibility="Visible" BorderBrush="{x:Null}" SelectionBrush="#FF646464">
+                <TextBox.Style>
+
+                    <Style BasedOn="{x:Null}" TargetType="{x:Type TextBox}">
+                        <Setter Property="BorderThickness" Value="2"/>
+                        <Setter Property="Padding" Value="1"/>
+                        <Setter Property="AllowDrop" Value="true"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TextBox}">
+                                    <Border x:Name="bg" BorderBrush="#FF825E5E" BorderThickness="1">
+                                        <ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="BorderBrush" TargetName="bg" Value="#858585"/>
+                                            <Setter Property="BorderThickness" TargetName="bg" Value="0"/>
+                                        </Trigger>
+
+                                        <Trigger Property="IsFocused" Value="True">
+                                            <Setter Property="BorderBrush" TargetName="bg" Value="#858585"/>
+                                            <Setter Property="BorderThickness" TargetName="bg" Value="0"/>
+                                        </Trigger>
+
+
+                                        <Trigger Property="IsFocused" Value="False">
+                                            <Setter Property="BorderBrush" TargetName="bg" Value="#858585"/>
+                                            <Setter Property="BorderThickness" TargetName="bg" Value="0"/>
+                                        </Trigger>
+
+                                        <Trigger Property="IsMouseOver" Value="False">
+                                            <Setter Property="BorderBrush" TargetName="bg" Value="#858585"/>
+                                            <Setter Property="BorderThickness" TargetName="bg" Value="0"/>
+                                        </Trigger>
+
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+
+                </TextBox.Style>
+            </TextBox>
         </DockPanel>
     </Grid>
 </Window>
