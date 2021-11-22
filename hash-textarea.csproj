@@ -6,7 +6,15 @@
     <RootNamespace>hash_textarea</RootNamespace>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>Resources\hashtext.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="新しいフォルダー\**" />
+    <EmbeddedResource Remove="新しいフォルダー\**" />
+    <None Remove="新しいフォルダー\**" />
+    <Page Remove="新しいフォルダー\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ReactiveProperty.WPF" Version="8.0.2" />
