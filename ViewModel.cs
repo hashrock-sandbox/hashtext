@@ -11,7 +11,7 @@ namespace hash_textarea
     {
         private const string _pattern = "テキストファイル(*.txt)|*.txt|Markdownファイル(*.md)|*.md|全てのファイル(*.*)|*.*";
 
-        public ReactiveProperty<string> Content
+        public ReactivePropertySlim<string> Content
         {
             get; set;
         }
@@ -21,26 +21,41 @@ namespace hash_textarea
         }
         public ReactiveProperty<string> Title
         { get; set; }
+        public ReactiveProperty<bool> Dirty
+        { get; set; }
+
+        private string _oldContent = "";
+
 
         public ViewModel()
         {
-            Content = new ReactiveProperty<string>("");
+            Content = new ReactivePropertySlim<string>("");
             Path = new ReactiveProperty<string?>();
-            Title = Path.Select(i =>
+            Dirty = new ReactiveProperty<bool>(false);
+
+            Title = Path.CombineLatest(Dirty, (i, d) =>
             {
+                var star = d ? " *" : "";
                 var filename = i != null ? System.IO.Path.GetFileName(i) : "New File";
-                return $"hashtext - {filename}";
+                return $"hashtext - {filename}{star}";
             }).ToReactiveProperty<string>();
+
+            Content.Subscribe((_) =>
+            {
+                if (!Dirty.Value && _oldContent != Content.Value)
+                {
+                    Dirty.Value = true;
+                }
+            });
 
             SaveFileCommand.Subscribe(_ =>
             {
-                if (Path.Value != null)
-                {
-                    File.WriteAllText(Path.Value, Content.Value);
-                }
-                else
+                if (Path.Value == null)
                 {
                     SaveNewFile();
+                } else {
+                    File.WriteAllText(Path.Value, Content.Value);
+                    ClearCache();
                 }
             });
             SaveFileAsCommand.Subscribe(_ =>
@@ -61,8 +76,15 @@ namespace hash_textarea
                 }
                 Content.Value = File.ReadAllText(dialog.FileName);
                 Path.Value = dialog.FileName;
+                ClearCache();
             });
 
+        }
+
+        private void ClearCache()
+        {
+            Dirty.Value = false;
+            _oldContent = Content.Value;
         }
 
         private void SaveNewFile()
@@ -77,6 +99,7 @@ namespace hash_textarea
             }
 
             File.WriteAllText(dialog.FileName, Content.Value);
+            ClearCache();
             Path.Value = dialog.FileName;
         }
 
