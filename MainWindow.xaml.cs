@@ -50,5 +50,15 @@ namespace hash_textarea
             }
             e.Handled = true;
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (vm.Dirty.Value && MessageBoxResult.Yes != MessageBox.Show("保存せずに終了しますか？", "確認", MessageBoxButton.YesNoCancel, MessageBoxImage.Information))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+        }
     }
 }
